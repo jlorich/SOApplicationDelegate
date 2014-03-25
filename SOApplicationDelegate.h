@@ -18,6 +18,9 @@
 /// An array of AppDelegate service objects
 @property (strong, readonly) NSArray *services;
 
+/// The main UIWindow for the application
+@property (strong, nonatomic) UIWindow *window;
+
 
 #pragma mark - Methods
 

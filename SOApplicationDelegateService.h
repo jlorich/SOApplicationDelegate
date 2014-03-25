@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SOApplicationDelegateService : UIResponder <UIApplicationDelegate>
+@interface SOApplicationDelegateService : NSObject <UIApplicationDelegate>
 
 /**
  * A shared singleton app delegate service object

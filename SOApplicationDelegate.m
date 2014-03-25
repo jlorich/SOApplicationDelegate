@@ -117,7 +117,7 @@
     {
         if ([service respondsToSelector:[invocation selector]])
         {
-            [self performSelector:@selector(invokeWithTarget:)
+            [invocation performSelector:@selector(invokeWithTarget:)
                          onThread:[NSThread currentThread]
                        withObject:service
                     waitUntilDone:YES];
