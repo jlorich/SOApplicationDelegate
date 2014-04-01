@@ -6,9 +6,8 @@
 ######Dependencies
 This project currently relies upon [MAObjCRuntime](https://github.com/mikeash/MAObjCRuntime).  I'll be adding a demo project and podspec soon to make this more apparent, though I do plan on eventually the dependency entirely.  It's only used in one place and I think it could by handled simply without it, but it's what I know and easy to use so it's in place for now.
 
-### Why make this?
-A few weeks ago I read [this](http://sizeof.io/2014/02/08/service-oriented-appdelegate/) post about service-oriented application delegates, and while I really liked the pattern, I was not a fan of the implementation.  Appdelegates are one of the most abused pieces of objective-C and tend to get crammed with tons of code, so abstracting that out into more reusable, testable classes is fantastic.  However, manually implementing and then re-calling each `UIApplicationDelegate` method on each service did not seem like a very elegant solution.  Thankfully Objective-c has some decent runtime methods we can use to improve on this.
-
+### Why?
+Appdelegates are one of the most abused pieces of UIKit and tend to get crammed with tons of code.  With some Objective-C runtime techniques we can elegantly abstract out code into Service objects that function just like they were part of the delegate themselves.  This allows for smaller, more reusable, more testable classes and a much more readable appdelegate.
 
 ### How?
 When a delegate method is to be called, the calling object always first checks if the delegate responds to that method.  By overriding `- (BOOL)respondsToSelector:(SEL)aSelector` we can tell the calling class that we respond to selectors that we don't actually implement.  Generally this would cause problems as you need to implement each method an object responds to, however `NSObject` also has the method `- (void)forwardInvocation:(NSInvocation *)anInvocation` which gets called every time an unknown selector is invoked on an object.  In this method we're tasked with forwarding the invocation of a method to a target that can receive it or raising an exception.
@@ -22,12 +21,3 @@ Creating a parent class for all the services is the obvious next step in improvi
 
 To solve this problem I've created a singleton dictionary of dispatch predicates (actually it's a dictionary of NSNumbers holding the predicates memory addresses, because NSDictionary only supports NSObject instances), along with a singleton dictionary of class instances.  These dictionaries are keyed by the current class name ( `NSStringFromClass([self class])` ) and are used to tell which `dispatch_once` blocks have been executed for each class.
 
-
-
----
-
-###Conclusion
-
-I've had this implementation being used on a project current in development for a couple weeks now and I'm very happy with it.  The app delegate is less than 50 lines, many of which are comments, and each services lives in it's own easily testable, single-responsibility class.  I highly recomment this pattern to anyone working on an iOS app.
-
----
